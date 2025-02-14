@@ -1,7 +1,29 @@
 = Migrate to OneCX version 6
 
-== Change FilterType values
-Please, make sure to update `FilterType` usage:
+== FilterType
+When using `FilterType` from *@onecx/angular-accelerator* it is important to make sure the following usages are updated as follows:
 
 * `FilterType.EQUAL` &#8594; `FilterType.EQUALS`
 * `FilterType.TRUTHY` &#8594; `FilterType.IS_NOT_EMPTY`
+
+== CurrentWorkspaceTopic
+`CurrentWorkspaceTopic` from *@onecx/integration-interface* is no longer exposing `getValue` method. Please, modify the usage to be asynchronous.
+
+== Data List Grid
+
+* `pageSizes` input accepts `number[]`
+* `showAllOption` is deprecated and not used by the component
+
+
+== Data Table
+
+* `pageSizes` input accepts `number[]`
+* `showAllOption` is deprecated and not used by the component 
+
+== Interactive Data View
+
+* `showAllOption` is deprecated and not used by the component
+
+== Data View
+
+* `showAllOption` is deprecated and not used by the component
