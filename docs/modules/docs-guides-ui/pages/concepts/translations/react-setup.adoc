@@ -1,0 +1,31 @@
+:idprefix:
+:idseparator: -
+
+[#react-translations-setup]
+= Translations Setup in React Applications
+
+React applications use `@onecx/react-utils` to register and resolve translation resources instead of a build-time assets configuration, wiring translations into an `i18next` backend. This page covers the setup steps. See xref:documentation:docs-guides-ui:concepts/translations/react-usage.adoc[Translations Usage in React Applications] for how the current language is synced once set up.
+
+[#react-translation-resource-registration]
+== Translation Resource Registration
+
+Use the helpers below to wire portal translations into your `i18next` backend configuration (for example inside an i18n setup file):
+
+[source,ts]
+----
+import i18n from 'i18next';
+import { registerPortalPageTranslations } from '@onecx/react-utils';
+
+registerPortalPageTranslations(i18n, import.meta.url);
+----
+
+If you need to resolve a different base path, use `getTranslationPathFromMeta` directly:
+
+[source,ts]
+----
+import { getTranslationPathFromMeta } from '@onecx/react-utils';
+
+const basePath = getTranslationPathFromMeta(import.meta.url, 'assets/i18n/');
+----
+
+See xref:documentation:docs-guides-ui:react/libraries/react-utils.adoc[@onecx/react-utils] for the full library reference.

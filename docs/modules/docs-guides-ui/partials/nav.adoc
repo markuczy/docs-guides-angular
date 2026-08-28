@@ -9,15 +9,25 @@
 
 ** xref:documentation:docs-guides-ui:setup/recommended/index.adoc[Recommended Setup]
 *** xref:documentation:docs-guides-ui:setup/recommended/expose-component-styles.adoc[Expose Component Styles]
+**** xref:documentation:docs-guides-ui:setup/recommended/expose-component-styles/angular.adoc[Angular Applications]
+**** xref:documentation:docs-guides-ui:setup/recommended/expose-component-styles/react.adoc[React Applications]
 *** xref:documentation:docs-guides-ui:setup/recommended/apply-theming.adoc[Apply Theming]
 *** xref:documentation:docs-guides-ui:setup/recommended/configure-translations.adoc[Configure Translations]
 *** xref:documentation:docs-guides-ui:setup/recommended/expose-library-assets.adoc[Expose Library Assets]
+**** xref:documentation:docs-guides-ui:setup/recommended/expose-library-assets/angular.adoc[Angular Applications]
+**** xref:documentation:docs-guides-ui:setup/recommended/expose-library-assets/react.adoc[React Applications]
 *** xref:documentation:docs-guides-ui:setup/recommended/adapt-routing.adoc[Adapt Routing]
 
 ** Concepts
 *** xref:documentation:docs-guides-ui:concepts/theming.adoc[Theming]
 *** xref:documentation:docs-guides-ui:concepts/translations.adoc[Translations]
+**** xref:documentation:docs-guides-ui:concepts/translations/angular-setup.adoc[Angular Setup]
+**** xref:documentation:docs-guides-ui:concepts/translations/angular-usage.adoc[Angular Usage]
+**** xref:documentation:docs-guides-ui:concepts/translations/react-setup.adoc[React Setup]
+**** xref:documentation:docs-guides-ui:concepts/translations/react-usage.adoc[React Usage]
 *** xref:documentation:docs-guides-ui:concepts/routing.adoc[Routing]
+**** xref:documentation:docs-guides-ui:concepts/routing/angular.adoc[Angular Applications]
+**** xref:documentation:docs-guides-ui:concepts/routing/react.adoc[React Applications]
 
 ** xref:documentation:docs-guides-ui:troubleshooting.adoc[UI Troubleshooting]
 

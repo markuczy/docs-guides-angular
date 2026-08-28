@@ -4,13 +4,11 @@
 :page-aliases: angular/routing/index.adoc
 
 :onecx_compatible_application: xref:documentation:docs-guides-ui:angular/app-to-onecx.adoc
-:app_state_service: xref:documentation:onecx-portal-ui-libs:libraries/angular-integration-interface.adoc#app-state-service
-:workspace_service: xref:documentation:onecx-portal-ui-libs:libraries/angular-integration-interface.adoc#workspace-service
 
 [#routing]
 = Routing
 
-An application integrated with OneCX still loads and runs without following these routing guidelines, but it behaves incorrectly: navigation may break when the app is embedded under a workspace-specific base path, or links to other applications may resolve to the wrong location. This page is a deep dive into the routing requirements and guidelines for both Angular and React applications. See xref:documentation:docs-guides-ui:setup/recommended/adapt-routing.adoc[Adapt Routing] for the introductory checklist item.
+An application integrated with OneCX still loads and runs without following these routing guidelines, but it behaves incorrectly: navigation may break when the app is embedded under a workspace-specific base path, or links to other applications may resolve to the wrong location. This page is a deep dive into the routing requirements and reasons behind them, shared by both Angular and React applications. See xref:documentation:docs-guides-ui:setup/recommended/adapt-routing.adoc[Adapt Routing] for the introductory checklist item.
 
 [#overview]
 == Overview
@@ -59,120 +57,8 @@ The rest of the URL path should be handled by the application itself. In this ca
 An application's router *will not be aware of the used parts of the URL that the OneCX shell handles*. Therefore, it is required to have appropriate routing mechanisms in order to ensure that the application can handle routing correctly regardless of the workspace configuration.
 ====
 
-[#angular-applications]
-== Angular Applications
+[#technology-specific-guidelines]
+== Technology-specific Guidelines
 
-[#general-routing-guidelines]
-=== General Routing Guidelines
-
-[#routing-inside-application]
-==== Routing Inside the Application
-
-When routing inside the application, it is important to use *relative paths* instead of *absolute paths*. This ensures that the application can handle routing correctly regardless of the workspace configuration.
-
-[#routing-inside-application-examples]
-===== Examples
-
-[#navigate-to-details-page]
-====== Navigate to details page
-
-Application is currently at `https://shell_deployment_path/employees-workspace/client-management` and needs to navigate to a client with ID 123, it should use a relative path.
-
-[source,javascript]
-----
-this.router.navigate(['client', 123]);
-----
-
-[#navigate-back]
-====== Navigate back
-
-Application is currently at `https://shell_deployment_path/employees-workspace/client-management/client/123` and needs to navigate back to the client list, it should use a relative path.
-
-[source,javascript]
-----
-this.router.navigate(['../'], { relativeTo: this.route });
-----
-
-[#routing-using-absolute-paths]
-==== Routing Using Absolute Paths
-
-Sometimes, it might be necessary to use absolute paths for routing. In such cases, it is crucial to construct the absolute path dynamically based on the current workspace configuration. This can be achieved by using the {app_state_service}[AppStateService] to get the `currentMfe$`, which contains the current workspace and application information.
-
-[#routing-using-absolute-paths-examples]
-===== Examples
-
-[#navigate-to-details-page-absolute]
-====== Navigate to details page using absolute path
-
-Application is currently at `https://shell_deployment_path/employees-workspace/client-management` and needs to navigate to a client with ID 123 using an absolute path. It should construct the absolute path dynamically.
-
-[source,typescript]
-----
-import { firstValueFrom } from 'rxjs';
-...
-
-appStateService: AppStateService; // Injected via constructor
-
-async routeOnClick() {
-    const mfeInfo = await firstValueFrom(this.appStateService.currentMfe$);
-    this.router.navigateByUrl(`/${mfeInfo.baseUrl}/client/123`);
-}
-----
-
-NOTE: If you are using ngrx, you can use the {app_state_service}[AppStateService] directly in your effects to construct the absolute path dynamically.
-
-[#routing-between-applications]
-==== Routing Between Applications
-
-If it is necessary to route between different applications or to specific endpoints, it is recommended to use the {workspace_service}[WorkspaceService].
-
-The {workspace_service}[WorkspaceService] provides methods to:
-
-* Dynamically construct URLs for applications and endpoints based on the current workspace.
-* Validate whether a route or endpoint exists before navigating.
-* Resolve endpoint aliases and inject parameters into endpoint paths.
-
-This approach ensures that applications remain decoupled from static configurations and are fully integrated into the OneCX workspace model.
-
-[#react-applications]
-== React Applications
-
-React applications resolve their base path at runtime using the `useAppHref` hook from `@onecx/react-webcomponents`, instead of a service injected into the router configuration.
-
-[#react-useapphref]
-=== Routing with useAppHref
-
-`useAppHref` retrieves and normalizes the URLs (base URL, app base href, and href) needed for routing in a microfrontend, relying on the `ConfigurationProvider` and `AppStateProvider` contexts from `@onecx/react-integration-interface`. Guard rendering until `href` is available, then prefix all routes with it so navigation stays aligned with the base path the shell mounted the app under.
-
-[source,tsx]
-----
-import { Route, Routes } from "react-router";
-import { useAppHref } from "@onecx/react-webcomponents";
-
-const AppRoutes = () => {
-  const { href } = useAppHref();
-
-  if (!href) {
-    return null;
-  }
-
-  return (
-    <Routes>
-      <Route path={`${href}/`} element={<Overview />} />
-      <Route path={`${href}/detail/:id`} element={<Detail />} />
-    </Routes>
-  );
-};
-----
-
-[#react-synced-router]
-=== Syncing Location with the Shell
-
-`@onecx/react-webcomponents` also provides routing integration helpers that keep the shell aware of the app's current location:
-
-* `SyncedRouterProvider` publishes location changes to the shell and reacts to `CurrentLocationTopic` updates.
-* `SyncedLocationContext` exposes the current location state.
-* `useSyncedLocation` reads the synced location state from context.
-* `withSyncedRouter` wraps a component with `SyncedRouterProvider`.
-
-See xref:documentation:docs-guides-ui:react/libraries/react-webcomponents.adoc[@onecx/react-webcomponents] for the full library reference.
+* xref:documentation:docs-guides-ui:concepts/routing/angular.adoc[Angular Applications] — relative and absolute path routing, and routing between applications, using the AppStateService and WorkspaceService.
+* xref:documentation:docs-guides-ui:concepts/routing/react.adoc[React Applications] — routing with the `useAppHref` hook from `@onecx/react-webcomponents`.

@@ -154,13 +154,10 @@ Sidebar Variables::
 |===
 ====
 
-[#angular-applications]
-== Angular Applications
-
 [#utilizing-theme-variables]
-=== Utilizing Theme Variables
+== Utilizing Theme Variables
 
-When creating styles for UI components, it's important to consider whether a style should be theme-aware. Example of a stylesheet using a theme variable:
+Regardless of whether your application is built with Angular or React, using a theme variable just means referencing the corresponding CSS variable in your styles — injecting and applying the variables' values is handled automatically. When creating styles for UI components, it's important to consider whether a style should be theme-aware. Example of a stylesheet using a theme variable:
 
 .styles.css
 [.source,css]
@@ -172,35 +169,4 @@ button {
 
 The example above sets the background color for each button element to the value corresponding to the `--primary-color` theme variable.
 
-[#react-applications]
-== React Applications
-
-React applications rely on `@onecx/react-utils` for theme variable injection instead of manually reading CSS variables.
-
-[#react-theme-variable-injection]
-=== Theme Variable Injection
-
-Theme variables are injected at runtime by calling `applyThemeVariables`, which updates the `@layer tokens` block inside scoped style tags — you do not need to read or apply theme CSS variables manually.
-
-[source,ts]
-----
-import { applyThemeVariables } from '@onecx/react-utils/theme';
-
-applyThemeVariables(theme, 'example|example-ui');
-----
-
-[#react-primereact-theme-import]
-=== PrimeReact Theme Base Import
-
-To keep PrimeReact styles aligned with OneCX theming, import the base theme stylesheet from `@onecx/react-utils` in your app styles:
-
-[source,css]
-----
-@import "primereact/resources/primereact.min.css";
-@import "primeicons/primeicons.css";
-@import "@onecx/react-utils/primeBaseTheme.scss";
-----
-
-Ensure the app uses `ThemeProvider` (from `@onecx/react-integration-interface`) or the full provider set via `withApp`/`withRemote` so theme updates stay synchronized.
-
-See xref:documentation:docs-guides-ui:react/libraries/react-utils.adoc[@onecx/react-utils] for the full library reference, including dynamic portal-rendered style scoping and style-attribute helpers.
+NOTE: React applications that use PrimeReact additionally need to import a base theme stylesheet so PrimeReact styles align with OneCX theming. See xref:documentation:docs-guides-ui:react/libraries/react-utils.adoc[@onecx/react-utils] for the full library reference, including the PrimeReact theme base import and the underlying theme variable injection mechanism.

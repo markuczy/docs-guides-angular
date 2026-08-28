@@ -1,0 +1,19 @@
+:idprefix:
+:idseparator: -
+
+[#react-translations-usage]
+= Translations Usage in React Applications
+
+After xref:documentation:docs-guides-ui:concepts/translations/react-setup.adoc[setting up translation resource registration], the `TranslationBridge` keeps the current language in sync so registered translations resolve correctly.
+
+[#react-translation-bridge]
+== TranslationBridge
+
+`TranslationBridge` syncs the OneCX user language (from `UserService.lang$`) with `react-i18next` by calling `i18n.changeLanguage`. It is automatically mounted by `withApp` and `withRemote` through `withBaseProviders`, so most applications do not need to use it directly.
+
+[source,tsx]
+----
+import { TranslationBridge } from '@onecx/react-utils/utils';
+----
+
+See xref:documentation:docs-guides-ui:react/libraries/react-utils.adoc[@onecx/react-utils] for the full library reference.
