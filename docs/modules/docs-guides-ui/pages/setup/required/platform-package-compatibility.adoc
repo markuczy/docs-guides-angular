@@ -1,0 +1,57 @@
+:idprefix:
+:idseparator: -
+
+[#platform-package-compatibility-requirements]
+= Platform & Package Compatibility Requirements
+
+Before an application can be loaded by the OneCX shell, it must satisfy a baseline of platform and package compatibility constraints. These are the *must-have* requirements from the OneCX UI libraries' xref:documentation:onecx-portal-ui-libs:onecx-compatibility.adoc[Compatibility guide]: skipping any of them results in a broken environment, not merely a degraded one. This page covers the must-have items that aren't already addressed by another Required Setup page. The remaining must-have items are covered elsewhere: constructing your app with `@onecx/angular-webcomponents` and exposing `remoteEntry.js` are covered by xref:documentation:docs-guides-ui:setup/required/expose-remote-module.adoc[Expose a Remote Module]; exposing library assets and styles, using relative-path routing, and configuring `importMeta` for translations are covered by the Recommended Setup tier (these were reclassified from "must-have" to "recommended" per ADR-0004, since the app still runs without them, just with visibly incorrect behavior). The guide's *should-have* requirements are lower priority still and aren't part of Required Setup at all.
+
+[#angular-version-compatibility]
+== Angular Version Compatibility
+
+Your application must use an Angular version equal to or lower than the version used by the shell (or, for shell-loaded technology preloaders, the respective preloader).
+
+* Check the shell version and ensure your app uses an equal or lower Angular version.
+* Use the shell's DevTools inspection technique described in xref:documentation:docs-guides-ui:troubleshooting.adoc[UI Troubleshooting] to inspect currently shared packages if you're unsure which version is in effect.
+
+.Compatible package versions for Angular 18 (libs version 5.x)
+|===
+| Package               | Compatible Versions
+
+| @ngx-translate/core   | ^15.0.0
+| ngx-build-plus        | ^18.0.0
+| primeng               | ^17.18.0
+|===
+
+.Compatible package versions for Angular 19 (libs version 6.x)
+|===
+| Package               | Compatible Versions
+
+| @ngx-translate/core   | ^16.0.0
+| ngx-build-plus        | ^19.0.0
+| primeng               | ^19.0.0
+|===
+
+[#angular-webcomponents-construction]
+== Constructed Using @onecx/angular-webcomponents
+
+Your Angular application must be constructed using `@onecx/angular-webcomponents` (the webcomponent expose method), not the plain Angular `NgModule` expose method. Skipping this results in the shell router falling out of sync with your app's routing, along with other potential issues. See xref:documentation:docs-guides-ui:setup/required/expose-remote-module.adoc#angular-webcomponent-method[Expose a Remote Module — Webcomponent Method] for the full setup steps.
+
+[#module-federation-technology-requirement]
+== Module Federation with remoteEntry.js
+
+Your application must expose a `remoteEntry.js` file via Module Federation, regardless of the technology it's built with. Without it, applications built with different technologies might not be compatible with the shell. See xref:documentation:docs-guides-ui:setup/required/expose-remote-module.adoc[Expose a Remote Module] for the full how-to.
+
+[#package-sharing-convention]
+== Package Sharing Convention
+
+* Use the caret (`^`) range for all shared package versions in `package.json`, except `rxjs`, which should use tilde (`~`).
+* Angular, PrimeNG, NgRx, and OneCX packages must be shared in your Module Federation `webpack.config.js` configuration.
+* If your app uses `@onecx/angular-accelerator` or `@onecx/portal-integration-interface`, also share the `@onecx/angular-utils` library — omitting it can cause unwanted side effects for your app and others in the shell.
+
+Getting the version range or webpack sharing syntax wrong is one of the most common sources of "broken environment" issues; see xref:documentation:docs-guides-ui:troubleshooting.adoc[UI Troubleshooting] for verification steps and worked examples.
+
+[#package-compatibility-check]
+== Ensure Package Compatibility
+
+Verify that every package used in your app is compatible with OneCX, using the version tables above as your baseline and the xref:documentation:onecx-portal-ui-libs:onecx-compatibility.adoc[full Compatibility guide] for the authoritative, up-to-date list.

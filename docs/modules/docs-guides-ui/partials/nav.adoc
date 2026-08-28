@@ -1,9 +1,14 @@
+* xref:documentation:docs-guides-ui:setup/required/index.adoc[Required Setup]
+** xref:documentation:docs-guides-ui:setup/required/platform-package-compatibility.adoc[Platform & Package Compatibility Requirements]
+** xref:documentation:docs-guides-ui:setup/required/expose-remote-module.adoc[Expose a Remote Module]
+** xref:documentation:docs-guides-ui:setup/required/configure-share-scopes.adoc[Configure Share Scopes]
+** xref:documentation:docs-guides-ui:setup/required/configure-authentication.adoc[Configure Authentication]
+
 * xref:documentation:docs-guides-ui:troubleshooting.adoc[UI Troubleshooting]
 
 * xref:documentation:docs-guides-ui:ui-additional/index.adoc[UI Additional Topics]
 ** xref:documentation:docs-guides-ui:ui-additional/configure-tsconfig-paths.adoc[Configure TypeScript Path Aliases (tsconfig paths)]
 ** xref:documentation:docs-guides-ui:ui-additional/environment-variables/environment-variables.adoc[Configure OneCX Environment Variables (Runtime Configuration)]
-** xref:documentation:docs-guides-ui:ui-additional/share-scopes.adoc[Share Scopes]
 ** xref:documentation:docs-guides-ui:ui-additional/enable-source-maps.adoc[Enable Source Maps]
 
 * xref:documentation:docs-guides-ui:angular/index.adoc[Angular]

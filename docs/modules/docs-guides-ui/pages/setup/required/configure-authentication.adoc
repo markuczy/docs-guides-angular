@@ -1,0 +1,110 @@
+:idprefix:
+:idseparator: -
+
+:page-aliases: module-federation/mf-authentication-service.adoc
+
+[#configure-authentication]
+= Configure Authentication
+
+Every application integrated with OneCX must be able to participate in the shell's authentication flow: sending an authenticated token with its requests and reacting correctly if that token becomes invalid. This page covers the default and custom authentication mechanisms for Angular, and the authentication utilities available to React applications.
+
+[#angular-applications]
+== Angular Applications
+
+By default, applications use the shell's built-in authentication service. A custom authentication service can be configured and provided instead.
+
+[#angular-custom-authentication-service]
+=== Custom Authentication Service
+
+A custom authentication service is loaded via Module Federation, which is used to load an implementation of a custom authentication factory that can handle authentication and authorization for the application.
+
+Configuration in environment:
+
+* `AUTH_SERVICE` — set this to `custom` to enable the custom authentication service.
+* `AUTH_SERVICE_CUSTOM_URL` — the URL to load the custom authentication service factory via Module Federation. The Module Federation remote should expose a factory function that returns an implementation of the authentication service factory.
+
+[#react-applications]
+== React Applications
+
+React applications use `@onecx/react-auth` to authenticate outgoing HTTP requests and to query authentication state exposed by the shell.
+
+[#react-axios-factory]
+=== axiosFactory Function
+
+`axiosFactory` creates an `axios` instance that automatically injects authorization headers from `window.onecxAuth`, useful in applications that require authentication for every HTTP request.
+
+[source,javascript]
+----
+export const axiosFactory: (baseURL?: string) => AuthenticatedAxiosInstance = (
+  baseURL
+) => {
+  // Implementation
+};
+----
+
+* `baseURL`: an optional parameter specifying the base URL for HTTP requests.
+* An interceptor calls `window.onecxAuth.authServiceProxy.v1.updateTokenIfNeeded()` and injects headers from `getHeaderValues()`.
+* Requests matching the `WHITELIST` (currently `assets`) are not attached with tokens.
+
+.Example usage
+[source,javascript]
+----
+// Create an axios instance with a base URL
+const apiClient = axiosFactory('https://api.example.com');
+
+// Make a GET request
+apiClient.get('/data')
+  .then(response => {
+    console.log('Data received:', response.data);
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
+
+// Make a POST request with authorization headers
+apiClient.post('/submit', { name: 'John Doe' })
+  .then(response => {
+    console.log('Submission successful:', response.data);
+  })
+  .catch(error => {
+    console.error('Error submitting data:', error);
+  });
+----
+
+[#react-auth-proxy-service]
+=== Auth Proxy Service
+
+`@onecx/react-auth` exposes the OneCX auth proxy under `window.onecxAuth.authServiceProxy`, letting you query auth state, user info, and trigger token refresh when needed.
+
+NOTE: The auth proxy is only available after the shell has been initialized. Check that it is available before using it.
+
+[source,ts]
+----
+if (!window.onecxAuth?.authServiceProxy) {
+  // handle missing auth proxy (e.g., show fallback or defer logic)
+  return;
+}
+----
+
+[source,ts]
+----
+const { authServiceProxy } = window.onecxAuth;
+
+// Ensure token is still valid before a guarded action
+await authServiceProxy.v1.updateTokenIfNeeded();
+
+// Read user / permissions (depending on shell implementation)
+const user = await authServiceProxy.v1.getUser();
+const permissions = await authServiceProxy.v1.getPermissions();
+----
+
+.Example usage with axiosFactory
+[source,ts]
+----
+const apiClient = axiosFactory('/api');
+
+await window.onecxAuth.authServiceProxy.v1.updateTokenIfNeeded();
+const response = await apiClient.get('/profile');
+----
+
+See xref:documentation:docs-guides-ui:react/libraries/react-auth.adoc[@onecx/react-auth] for the full library reference.
