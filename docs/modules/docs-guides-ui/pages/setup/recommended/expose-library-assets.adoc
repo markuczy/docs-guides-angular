@@ -1,0 +1,50 @@
+:idprefix:
+:idseparator: -
+
+[#expose-library-assets]
+= Expose Library Assets
+
+An application integrated with OneCX still loads and runs without exposing the assets of the OneCX libraries it depends on, but it behaves incorrectly: missing static assets (e.g. icons) shipped by those libraries. Because Micro Frontends are loaded relative to the shell rather than from their own origin, library assets need to be exposed through the application's own build output using a dedicated mechanism, rather than assuming they're resolvable from the library's package location.
+
+[#angular-applications]
+== Angular Applications
+
+If your application uses OneCX libraries, confirm their assets (e.g. i18n files) are exposed and available in your build output — otherwise assets shipped by those libraries are missing. Include the assets of the libraries you use in the `angular.json` or `project.json` file.
+
+.Example assets configuration
+[source,json]
+----
+...
+  "build": {
+    ...
+    "assets": [
+      ...
+      // @onecx/portal-integration-angular
+      {
+        "glob": "**/*",
+        "input": "node_modules/@onecx/portal-integration-angular/assets/",
+        "output": "/onecx-portal-lib/assets/"
+      }
+      // @onecx/angular-accelerator
+      {
+        "glob": "**/*",
+        "input": "./node_modules/@onecx/angular-accelerator/assets/",
+        "output": "/onecx-angular-accelerator/assets/"
+      }
+      // @onecx/angular-utils
+      {
+        "glob": "**/*",
+        "input": "./node_modules/@onecx/angular-utils/assets/",
+        "output": "/onecx-angular-utils/assets/"
+      }
+      ...
+    ],
+    ...
+  }
+...
+----
+
+[#react-applications]
+== React Applications
+
+React applications resolve OneCX library assets (such as translation files) at runtime via helpers from `@onecx/react-utils` rather than a static build-time assets configuration — see xref:documentation:docs-guides-ui:concepts/translations.adoc[Translations] for the translation-resource resolution mechanism, which follows the same pattern used for other library assets.

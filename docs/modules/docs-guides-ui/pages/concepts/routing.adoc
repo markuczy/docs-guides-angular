@@ -7,10 +7,10 @@
 :app_state_service: xref:documentation:onecx-portal-ui-libs:libraries/angular-integration-interface.adoc#app-state-service
 :workspace_service: xref:documentation:onecx-portal-ui-libs:libraries/angular-integration-interface.adoc#workspace-service
 
-[#follow-navigation-routing-guidelines]
-= Follow Navigation & Routing Guidelines
+[#routing]
+= Routing
 
-An application integrated with OneCX still loads and runs without following these routing guidelines, but it behaves incorrectly: navigation may break when the app is embedded under a workspace-specific base path, or links to other applications may resolve to the wrong location. This page covers the routing requirements and guidelines for both Angular and React applications.
+An application integrated with OneCX still loads and runs without following these routing guidelines, but it behaves incorrectly: navigation may break when the app is embedded under a workspace-specific base path, or links to other applications may resolve to the wrong location. This page is a deep dive into the routing requirements and guidelines for both Angular and React applications. See xref:documentation:docs-guides-ui:setup/recommended/adapt-routing.adoc[Adapt Routing] for the introductory checklist item.
 
 [#overview]
 == Overview

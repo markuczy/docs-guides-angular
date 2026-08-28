@@ -1,0 +1,108 @@
+:idprefix:
+:idseparator: -
+
+[#expose-component-styles]
+= Expose Component Styles
+
+An application integrated with OneCX still loads and runs even if its own or its libraries' styles aren't exposed correctly, but it renders with visibly wrong styles: missing layout or unstyled components. This page covers exposing your application's and its OneCX libraries' styles in the build output, so the shell can style your app correctly.
+
+[#angular-applications]
+== Angular Applications
+
+[#angular-expose-app-styles]
+=== Expose App styles.css
+
+Your application must expose its own `styles.css` in the build output. How this is done depends on the build tool used:
+
+.NX (project.json)
+[source,json]
+----
+{
+    ...
+    "styles": [
+        {
+            "input": "./src/styles.scss",
+            "bundleName": "styles",
+            "inject": true
+        }
+    ],
+    ...
+}
+----
+
+.Angular CLI (package.json)
+[source,json]
+----
+{
+  ...
+  "scripts": {
+    "postbuild": "mv \"$(find dist/my-project-name -maxdepth 1 -type f -name 'styles.*.css' | head -n 1)\" dist/my-project-name/styles.css",
+  }
+  ...
+}
+----
+
+Because the generated stylesheet filename normally includes a content hash, adjust the build command to rename it to a stable `styles.css`:
+
+.Example package.json
+[source,json]
+----
+{
+  ...
+  "scripts": {
+    ...
+    "build": "nx build && cp dist/my-project-name/styles.*.css dist/my-project-name/styles.css",
+    ...
+  }
+  ...
+}
+----
+
+Verify that `styles.css`, including all of your app's styles, is present in the build output before deploying.
+
+[#angular-expose-library-styles]
+=== Expose Library Styles
+
+If your application uses OneCX libraries that ship their own stylesheets, expose those stylesheets in your build configuration as well — otherwise components sourced from those libraries render with incorrect styles.
+
+.Example styles configuration
+[source,json]
+----
+...
+  "build": {
+    ...
+    "styles": [
+      ...
+      // @onecx/portal-integration-angular
+      "node_modules/@onecx/portal-integration-angular/assets/styles.scss",
+
+      // @onecx/angular-accelerator
+      "node_modules/@onecx/angular-accelerator/assets/styles.scss",
+      ...
+    ],
+    ...
+  }
+...
+----
+
+[#react-applications]
+== React Applications
+
+React applications rely on `@onecx/react-utils` for style scoping instead of a build-time styles configuration.
+
+[#react-style-scoping]
+=== Style Scoping
+
+Style scoping and PrimeReact isolation are wired automatically by the `withApp` and `withRemote` higher-order components (HOCs) from `@onecx/react-utils`. Use them to bootstrap your application so scoped containers are provided for your microfrontend.
+
+[source,tsx]
+----
+import { withApp, withRemote } from '@onecx/react-utils';
+
+export default withApp(AppRouter, {
+  PRODUCT_NAME: 'example',
+  REMOTES_NAME: 'example-remotes'
+});
+----
+
+See xref:documentation:docs-guides-ui:react/libraries/react-utils.adoc[@onecx/react-utils] for the full library reference, including dynamic portal-rendered style scoping and style-attribute helpers.

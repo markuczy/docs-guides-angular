@@ -1,97 +1,20 @@
 :idprefix:
 :idseparator: -
 
-[#expose-component-styles-theming]
-= Expose Component Styles & Apply Theming
-
-An application integrated with OneCX still loads and runs even if its own or its libraries' styles aren't exposed correctly, but it renders with visibly wrong styles: missing layout, unstyled components, or a theme that doesn't match the rest of the shell. This page covers exposing your application's and its OneCX libraries' styles in the build output, and using OneCX theme variables so those styles stay aligned with the currently active theme.
-
-[#angular-applications]
-== Angular Applications
-
-[#angular-expose-app-styles]
-=== Expose App styles.css
-
-Your application must expose its own `styles.css` in the build output. How this is done depends on the build tool used:
-
-.NX (project.json)
-[source,json]
-----
-{
-    ...
-    "styles": [
-        {
-            "input": "./src/styles.scss",
-            "bundleName": "styles",
-            "inject": true
-        }
-    ],
-    ...
-}
-----
-
-.Angular CLI (package.json)
-[source,json]
-----
-{
-  ...
-  "scripts": {
-    "postbuild": "mv \"$(find dist/my-project-name -maxdepth 1 -type f -name 'styles.*.css' | head -n 1)\" dist/my-project-name/styles.css",
-  }
-  ...
-}
-----
-
-Because the generated stylesheet filename normally includes a content hash, adjust the build command to rename it to a stable `styles.css`:
-
-.Example package.json
-[source,json]
-----
-{
-  ...
-  "scripts": {
-    ...
-    "build": "nx build && cp dist/my-project-name/styles.*.css dist/my-project-name/styles.css",
-    ...
-  }
-  ...
-}
-----
-
-Verify that `styles.css`, including all of your app's styles, is present in the build output before deploying.
-
-[#angular-expose-library-styles]
-=== Expose Library Styles
-
-If your application uses OneCX libraries that ship their own stylesheets, expose those stylesheets in your build configuration as well — otherwise components sourced from those libraries render with incorrect styles.
-
-.Example styles configuration
-[source,json]
-----
-...
-  "build": {
-    ...
-    "styles": [
-      ...
-      // @onecx/portal-integration-angular
-      "node_modules/@onecx/portal-integration-angular/assets/styles.scss",
-
-      // @onecx/angular-accelerator
-      "node_modules/@onecx/angular-accelerator/assets/styles.scss",
-      ...
-    ],
-    ...
-  }
-...
-----
-
-[#theme-appliance]
-=== Theme Appliance
+[#theming]
+= Theming
 
 In OneCX, each workspace can use a different theme for its pages. Each theme defines the same set of CSS variables, available on every page, but with different values. The availability of those CSS variables is handled by the OneCX shell based on the accessed workspace — an app does not have to do anything to apply the theme itself. The only responsibility is to use theme variables in its own styles instead of hard-coded values.
 
+This page is a deep dive into the available theme variables and how to use them. See xref:documentation:docs-guides-ui:setup/recommended/apply-theming.adoc[Apply Theming] for the introductory checklist item.
+
+[#theme-appliance]
+== Theme Appliance
+
+As described above, applying a theme is handled entirely by the OneCX shell. Applications only need to consume the CSS variables it exposes.
+
 [#theme-variables]
-=== Theme Variables
+== Theme Variables
 
 Theme variables are CSS variables available on the page for any application.
 
@@ -231,6 +154,9 @@ Sidebar Variables::
 |===
 ====
 
+[#angular-applications]
+== Angular Applications
+
 [#utilizing-theme-variables]
 === Utilizing Theme Variables
 
@@ -249,22 +175,7 @@ The example above sets the background color for each button element to the value
 [#react-applications]
 == React Applications
 
-React applications rely on `@onecx/react-utils` for style scoping and theme variable injection instead of a build-time styles configuration.
-
-[#react-style-scoping]
-=== Style Scoping
-
-Style scoping and PrimeReact isolation are wired automatically by the `withApp` and `withRemote` higher-order components (HOCs) from `@onecx/react-utils`. Use them to bootstrap your application so scoped containers are provided for your microfrontend.
-
-[source,tsx]
-----
-import { withApp, withRemote } from '@onecx/react-utils';
-
-export default withApp(AppRouter, {
-  PRODUCT_NAME: 'example',
-  REMOTES_NAME: 'example-remotes'
-});
-----
+React applications rely on `@onecx/react-utils` for theme variable injection instead of manually reading CSS variables.
 
 [#react-theme-variable-injection]
 === Theme Variable Injection

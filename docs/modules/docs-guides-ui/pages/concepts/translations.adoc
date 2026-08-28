@@ -6,15 +6,15 @@
 :onecx_compatible_application: xref:documentation:docs-guides-ui:angular/app-to-onecx.adoc
 :user_service: xref:documentation:onecx-portal-ui-libs:libraries/angular-integration-interface.adoc#user-service
 
-[#configure-translations-library-assets]
-= Expose & Configure Translations / Library Assets
+[#translations]
+= Translations
 
-An application integrated with OneCX still loads and runs without multi-language translations or exposed library assets, but it behaves incorrectly: missing or untranslated text, or missing static assets (e.g. icons) shipped by the OneCX libraries it depends on. This page covers setting up and using `@ngx-translate`-based translations in Angular applications, exposing the static assets of the OneCX libraries used, and the translation-resource wiring used by React applications.
+In OneCX, multi-language support is available via translations. This page is a deep dive into setting up and using `@ngx-translate`-based translations in Angular applications, and the translation-resource wiring used by React applications. See xref:documentation:docs-guides-ui:setup/recommended/configure-translations.adoc[Configure Translations] for the introductory checklist item.
 
 [#angular-applications]
 == Angular Applications
 
-In OneCX, multi-language support is available via translations using the `@ngx-translate` library. A {onecx_compatible_application}[OneCX compatible application] can be set up for multi-language translation to support multiple languages in the application.
+A {onecx_compatible_application}[OneCX compatible application] can be set up for multi-language translation to support multiple languages in the application, using the `@ngx-translate` library.
 
 [#angular-translations-setup]
 === Setup
@@ -269,44 +269,6 @@ import { TranslateService } from '@ngx-translate/core';
 this.translate.get('GREETING', params).subscribe((translated: string) => {
     console.log('Translated with params:', translated);
 });
-----
-
-[#angular-expose-library-assets]
-=== Expose Library Assets
-
-If your application uses OneCX libraries, confirm their assets (e.g. i18n files) are exposed and available in your build output — otherwise translations shipped by those libraries are missing. Include the assets of the libraries you use in the `angular.json` or `project.json` file.
-
-.Example assets configuration
-[source,json]
-----
-...
-  "build": {
-    ...
-    "assets": [
-      ...
-      // @onecx/portal-integration-angular
-      {
-        "glob": "**/*",
-        "input": "node_modules/@onecx/portal-integration-angular/assets/",
-        "output": "/onecx-portal-lib/assets/"
-      }
-      // @onecx/angular-accelerator
-      {
-        "glob": "**/*",
-        "input": "./node_modules/@onecx/angular-accelerator/assets/",
-        "output": "/onecx-angular-accelerator/assets/"
-      }
-      // @onecx/angular-utils
-      {
-        "glob": "**/*",
-        "input": "./node_modules/@onecx/angular-utils/assets/",
-        "output": "/onecx-angular-utils/assets/"
-      }
-      ...
-    ],
-    ...
-  }
-...
 ----
 
 [#angular-language-information]

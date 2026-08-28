@@ -8,9 +8,16 @@
 *** xref:documentation:docs-guides-ui:setup/required/configure-authentication.adoc[Configure Authentication]
 
 ** xref:documentation:docs-guides-ui:setup/recommended/index.adoc[Recommended Setup]
-*** xref:documentation:docs-guides-ui:setup/recommended/expose-component-styles-theming.adoc[Expose Component Styles & Apply Theming]
-*** xref:documentation:docs-guides-ui:setup/recommended/configure-translations-library-assets.adoc[Expose & Configure Translations / Library Assets]
-*** xref:documentation:docs-guides-ui:setup/recommended/navigation-routing-guidelines.adoc[Follow Navigation & Routing Guidelines]
+*** xref:documentation:docs-guides-ui:setup/recommended/expose-component-styles.adoc[Expose Component Styles]
+*** xref:documentation:docs-guides-ui:setup/recommended/apply-theming.adoc[Apply Theming]
+*** xref:documentation:docs-guides-ui:setup/recommended/configure-translations.adoc[Configure Translations]
+*** xref:documentation:docs-guides-ui:setup/recommended/expose-library-assets.adoc[Expose Library Assets]
+*** xref:documentation:docs-guides-ui:setup/recommended/adapt-routing.adoc[Adapt Routing]
+
+** Concepts
+*** xref:documentation:docs-guides-ui:concepts/theming.adoc[Theming]
+*** xref:documentation:docs-guides-ui:concepts/translations.adoc[Translations]
+*** xref:documentation:docs-guides-ui:concepts/routing.adoc[Routing]
 
 ** xref:documentation:docs-guides-ui:troubleshooting.adoc[UI Troubleshooting]
 
