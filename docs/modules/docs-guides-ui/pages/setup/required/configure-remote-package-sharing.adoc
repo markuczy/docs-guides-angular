@@ -59,6 +59,11 @@ shared: {
 
 Depending on the build tool and Module Federation plugin used by the application, the exact configuration syntax may differ, but the concept of assigning shared dependencies to a share scope remains the same.
 
+[#which-packages-to-share]
+== Which Packages to Share
+
+See xref:documentation:docs-guides-ui:setup/required/platform-package-compatibility.adoc#package-sharing-convention[Package Sharing Convention] for the list of packages that must be shared (Angular, PrimeNG, NgRx, OneCX, and conditionally `@onecx/angular-utils`) and the versioning rules to follow when declaring them.
+
 [#automatic-package-sharing]
 == Automatic Package Sharing
 

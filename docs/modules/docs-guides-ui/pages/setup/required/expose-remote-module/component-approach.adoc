@@ -40,7 +40,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularAuthModule } from '@onecx/angular-auth';
 import { bootstrapRemoteComponent } from '@onecx/angular-webcomponents';
-import { UserService } from '@onecx/portal-integration-angular';
+import { UserService } from '@onecx/angular-integration-interface';
 import { ExampleComponent } from './example.component';
 import { BASE_URL, provideTranslateServiceForRoot } from '@onecx/angular-remote-components';
 
@@ -127,8 +127,6 @@ The component imports:
 * `AngularAuthModule` — participates in the shell's authentication flow (see xref:documentation:docs-guides-ui:setup/required/configure-authentication.adoc[Configure Authentication]).
 * `AngularRemoteComponentsModule` — provides the `ocxRemoteComponent`/`ocxRemoteWebcomponent` contract used by the Slot Component to configure the remote component.
 * `TranslateModule` — enables the `translate` pipe/directive and injecting `TranslateService` for translations.
-
-`PortalCoreModule` is not needed here: it provides shell-wide UI building blocks (layout, dialog service, breadcrumbs, etc.) that a single Remote Component typically doesn't need. Import it only if the component actually uses one of those building blocks.
 
 Key component features:
 

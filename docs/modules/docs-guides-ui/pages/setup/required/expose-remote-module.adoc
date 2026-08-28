@@ -11,7 +11,7 @@ Every application integrated with OneCX must expose itself to the shell via Modu
 
 Content loading is triggered by route changes (for modules) or Slot Component display (for remote components). The content is loaded via the remote entry file (`remoteEntry.js`) configured in the bundler's Module Federation plugin. Regardless of technology, an application *must* expose a `remoteEntry.js` — see xref:documentation:docs-guides-ui:setup/required/platform-package-compatibility.adoc[Platform & Package Compatibility Requirements] for the full compatibility baseline.
 
-An application can also expose other files that contain the remote information, such as the `mf-manifest.json` produced by `@module-federation/enhanced`-based builds. See xref:documentation:onecx-docs-dev:shell-integration/shell-v3-migration.adoc#mf-manifest[Exposing mf-manifest.json file] for details.
+It is recommended to build on `@module-federation/enhanced` (directly, or via `@nx/angular/module-federation` for Nx applications) and to also expose the `mf-manifest.json` file it produces, which contains metadata about the exposed modules and their dependencies and enables better integration and compatibility with the shell. See xref:documentation:onecx-docs-dev:shell-integration/shell-v3-migration.adoc#mf-manifest[Exposing mf-manifest.json file] for details.
 
 [#angular-applications]
 == Angular Applications

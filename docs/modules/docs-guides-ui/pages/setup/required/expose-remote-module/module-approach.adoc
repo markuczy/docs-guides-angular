@@ -108,7 +108,7 @@ Services should use `PortalApiConfiguration` to construct correct URLs based on 
 
 [source,typescript]
 ----
-import { PortalApiConfiguration } from '@onecx/portal-integration-angular'
+import { PortalApiConfiguration } from '@onecx/angular-utils'
 import { Configuration } from './shared/generated'
 import { environment } from './environments/environment'
 
