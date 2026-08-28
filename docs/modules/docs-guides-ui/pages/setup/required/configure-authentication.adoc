@@ -1,32 +1,20 @@
 :idprefix:
 :idseparator: -
 
-:page-aliases: module-federation/mf-authentication-service.adoc
-
 [#configure-authentication]
 = Configure Authentication
 
-Every application integrated with OneCX must be able to participate in the shell's authentication flow: sending an authenticated token with its requests and reacting correctly if that token becomes invalid. This page covers the default and custom authentication mechanisms for Angular, and the authentication utilities available to React applications.
+Every application integrated with OneCX must ensure that all outgoing HTTP requests carry the shell's authenticated header. This is the only requirement to participate in the shell's authentication flow; how to configure a custom authentication service or query authentication state directly (logout, token refresh, user info) is covered in a separate Auth deep dive guide.
 
 [#angular-applications]
 == Angular Applications
 
-By default, applications use the shell's built-in authentication service. A custom authentication service can be configured and provided instead.
-
-[#angular-custom-authentication-service]
-=== Custom Authentication Service
-
-A custom authentication service is loaded via Module Federation, which is used to load an implementation of a custom authentication factory that can handle authentication and authorization for the application.
-
-Configuration in environment:
-
-* `AUTH_SERVICE` — set this to `custom` to enable the custom authentication service.
-* `AUTH_SERVICE_CUSTOM_URL` — the URL to load the custom authentication service factory via Module Federation. The Module Federation remote should expose a factory function that returns an implementation of the authentication service factory.
+Import `AngularAuthModule` from `@onecx/angular-auth` in the application's bootstrap providers. It registers an HTTP interceptor that automatically attaches the required authentication headers to outgoing requests.
 
 [#react-applications]
 == React Applications
 
-React applications use `@onecx/react-auth` to authenticate outgoing HTTP requests and to query authentication state exposed by the shell.
+React applications use `axiosFactory` from `@onecx/react-auth` to create an `axios` instance that automatically attaches the required authentication headers to outgoing requests.
 
 [#react-axios-factory]
 === axiosFactory Function
@@ -69,42 +57,6 @@ apiClient.post('/submit', { name: 'John Doe' })
   .catch(error => {
     console.error('Error submitting data:', error);
   });
-----
-
-[#react-auth-proxy-service]
-=== Auth Proxy Service
-
-`@onecx/react-auth` exposes the OneCX auth proxy under `window.onecxAuth.authServiceProxy`, letting you query auth state, user info, and trigger token refresh when needed.
-
-NOTE: The auth proxy is only available after the shell has been initialized. Check that it is available before using it.
-
-[source,ts]
-----
-if (!window.onecxAuth?.authServiceProxy) {
-  // handle missing auth proxy (e.g., show fallback or defer logic)
-  return;
-}
-----
-
-[source,ts]
-----
-const { authServiceProxy } = window.onecxAuth;
-
-// Ensure token is still valid before a guarded action
-await authServiceProxy.v1.updateTokenIfNeeded();
-
-// Read user / permissions (depending on shell implementation)
-const user = await authServiceProxy.v1.getUser();
-const permissions = await authServiceProxy.v1.getPermissions();
-----
-
-.Example usage with axiosFactory
-[source,ts]
-----
-const apiClient = axiosFactory('/api');
-
-await window.onecxAuth.authServiceProxy.v1.updateTokenIfNeeded();
-const response = await apiClient.get('/profile');
 ----
 
 See xref:documentation:docs-guides-ui:react/libraries/react-auth.adoc[@onecx/react-auth] for the full library reference.

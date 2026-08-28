@@ -1,12 +1,19 @@
 :idprefix:
 :idseparator: -
 
-:page-aliases: ui-additional/share-scopes.adoc
+:page-aliases: setup/required/configure-share-scopes.adoc
 
-[#configure-share-scopes]
-= Configure Share Scopes
+[#configure-remote-package-sharing]
+= Configure Remote Package Sharing
 
-Module Federation allows applications to share dependencies at runtime, but it requires a consistent configuration of shared modules and their versions. Share scopes are a way to group shared dependencies under a specific name, and every application must specify which share scope it should be loaded into. This is mandatory Module Federation configuration — without it, remote loading is broken, not merely degraded.
+Module Federation allows applications to share dependencies at runtime, but it requires a consistent configuration of shared modules and their versions. This is mandatory Module Federation configuration — without it, remote loading is broken, not merely degraded.
+
+Configuring remote package sharing has two parts: assigning a *share scope* (see below) and, for each shared dependency, its own share scope assignment.
+
+[#share-scopes]
+== Share Scopes
+
+Share scopes are a way to group shared dependencies under a specific name, and every application must specify which share scope it should be loaded into.
 
 Every application can specify the following in relation to share scopes:
 
@@ -14,7 +21,7 @@ Every application can specify the following in relation to share scopes:
 * For each shared dependency, which scope it belongs to.
 
 [#setting-loading-share-scope]
-== Setting Loading Share Scope
+=== Setting Loading Share Scope
 
 For every application, the share scope it should be loaded into is determined by the `shareScope` property in the deployment configuration of the app via Helm. It can be set for the whole application or for individual microfrontends. This information is used by the shell during remote loading.
 
@@ -32,7 +39,7 @@ app:
 ----
 
 [#setting-shared-dependencies-share-scope]
-== Setting Shared Dependencies' Share Scope
+=== Setting Shared Dependencies' Share Scope
 
 On the application side, each shared dependency can be assigned to a share scope in the Module Federation configuration, by adding the `shareScope` property to the shared dependency declaration.
 
@@ -51,6 +58,23 @@ shared: {
 ----
 
 Depending on the build tool and Module Federation plugin used by the application, the exact configuration syntax may differ, but the concept of assigning shared dependencies to a share scope remains the same.
+
+[#automatic-package-sharing]
+== Automatic Package Sharing
+
+Use `getOneCXSharedRecommendations` from `@onecx/accelerator` instead of hand-writing the `shared` configuration for OneCX packages — it ensures the correct `shareScope` (and other sharing settings) is always set for each dependency.
+
+[source,typescript]
+----
+import { getOneCXSharedRecommendations } from '@onecx/accelerator'
+
+const config = {
+  // name, filename, exposes, etc.
+  shared: (libraryName, sharedConfig) => {
+    return getOneCXSharedRecommendations(libraryName, sharedConfig)
+  }
+}
+----
 
 [#onecx-share-scopes]
 == OneCX Share Scopes

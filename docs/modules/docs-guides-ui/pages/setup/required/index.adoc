@@ -17,6 +17,8 @@ TIP: If a step isn't listed here, it belongs to a different tier. A Recommended 
 == Pages
 
 * xref:documentation:docs-guides-ui:setup/required/platform-package-compatibility.adoc[Platform & Package Compatibility Requirements] — the Angular version, package-version, and package-sharing constraints an app must satisfy to be compatible with the shell.
-* xref:documentation:docs-guides-ui:setup/required/expose-remote-module.adoc[Expose a Remote Module] — how to expose your application's module, component, or web component via Module Federation so the shell can load it.
-* xref:documentation:docs-guides-ui:setup/required/configure-share-scopes.adoc[Configure Share Scopes] — how to assign your app and its shared dependencies to the correct Module Federation share scope.
-* xref:documentation:docs-guides-ui:setup/required/configure-authentication.adoc[Configure Authentication] — how to integrate with the shell's authentication mechanism, including custom authentication services.
+* xref:documentation:docs-guides-ui:setup/required/expose-remote-module.adoc[Expose a Remote Module] — how to expose an application's module or component via Module Federation so the shell can load it.
+** xref:documentation:docs-guides-ui:setup/required/expose-remote-module/module-approach.adoc[Module Approach]
+** xref:documentation:docs-guides-ui:setup/required/expose-remote-module/component-approach.adoc[Component Approach]
+* xref:documentation:docs-guides-ui:setup/required/configure-remote-package-sharing.adoc[Configure Remote Package Sharing] — how to assign the app and its shared dependencies to the correct Module Federation share scope.
+* xref:documentation:docs-guides-ui:setup/required/configure-authentication.adoc[Configure Authentication] — how to ensure requests carry the shell's authentication header.

@@ -1,17 +1,17 @@
 :idprefix:
 :idseparator: -
 
-:page-aliases: module-federation/application-bootstrapping.adoc, module-federation/mf-shell-router.adoc
-
 [#expose-a-remote-module]
 = Expose a Remote Module
 
-Every application integrated with OneCX must expose itself to the shell via Module Federation, so the shell can dynamically load it at runtime. This page covers the requirements and setup steps for both Angular and React applications. It replaces the previous stand-alone "Application Bootstrapping" and "Use of Module Federation in Shell router" pages, which have been folded into this Required Setup page.
+Every application integrated with OneCX must expose itself to the shell via Module Federation, so the shell can dynamically load it at runtime. This page covers the requirements and setup steps for both Angular and React applications.
 
 [#overview]
 == Overview
 
-Content loading is triggered by route changes (for modules) or Slot Component display (for remote components). The content is loaded via the remote entry file (`remoteEntry.js`) configured in your bundler's Module Federation plugin. Regardless of technology, your application *must* expose a `remoteEntry.js` — see xref:documentation:docs-guides-ui:setup/required/platform-package-compatibility.adoc[Platform & Package Compatibility Requirements] for the full compatibility baseline.
+Content loading is triggered by route changes (for modules) or Slot Component display (for remote components). The content is loaded via the remote entry file (`remoteEntry.js`) configured in the bundler's Module Federation plugin. Regardless of technology, an application *must* expose a `remoteEntry.js` — see xref:documentation:docs-guides-ui:setup/required/platform-package-compatibility.adoc[Platform & Package Compatibility Requirements] for the full compatibility baseline.
+
+An application can also expose other files that contain the remote information, such as the `mf-manifest.json` produced by `@module-federation/enhanced`-based builds. See xref:documentation:onecx-docs-dev:shell-integration/shell-v3-migration.adoc#mf-manifest[Exposing mf-manifest.json file] for details.
 
 [#angular-applications]
 == Angular Applications
@@ -21,255 +21,10 @@ Content loading is triggered by route changes (for modules) or Slot Component di
 
 This method uses Web Components *Custom Elements* to register content, allowing multiple frameworks and Angular versions to coexist in the shell. It is the recommended approach; the alternative "Angular expose method" (exposing an `NgModule` directly) limits the whole platform to a single Angular version and is not recommended.
 
-[#angular-module-bootstrapping]
-==== Module Bootstrapping
+There are two ways to expose an Angular application depending on what needs to be loaded by the shell:
 
-Requirements:
-
-. Webpack exposes `main.ts`.
-. `main.ts` bootstraps asynchronously.
-. The module handles common Angular issues with Module Federation.
-. The module must:
-  * Register an entry point as a Custom Element.
-  * Adapt routing for shell integration.
-  * Configure services for correct resource URLs.
-
-.webpack.config.js
-[source,typescript]
-----
-const config = withModuleFederationPlugin({
-  name: 'example-ui',
-  filename: 'remoteEntry.js',
-  exposes: {
-    './ExampleModule': './src/main.ts'
-  },
-})
-----
-
-.src/main.ts
-[source,typescript]
-----
-import('./bootstrap').catch((err) => console.error(err))
-----
-
-.src/bootstrap.ts
-[source,typescript]
-----
-import { bootstrapModule } from '@onecx/angular-webcomponents'
-import { environment } from './environments/environment'
-import { ExampleModule } from './app/module'
-
-bootstrapModule(ExampleModule, 'microfrontend', environment.production)
-----
-
-The `bootstrap.ts` file uses `@onecx/angular-webcomponents` to bootstrap the module and handle common Angular issues with Module Federation.
-
-[#angular-module-with-dobootstrap]
-==== Create a Module with DoBootstrap and CreateAppEntrypoint
-
-`createAppEntrypoint` registers `AppEntrypointComponent` as `<example-webcomponent>`.
-
-.src/app/module.ts
-[source,typescript]
-----
-import { createAppEntrypoint } from '@onecx/angular-webcomponents'
-export class ExampleModule implements DoBootstrap {
-    constructor(private readonly injector: Injector) {}
-
-    ngDoBootstrap(): void {
-        createAppEntrypoint(AppEntrypointComponent, 'example-webcomponent', this.injector)
-    }
-}
-----
-
-[#angular-initialize-router-provider]
-==== Adding the initializeRouter Provider
-
-[source,typescript]
-----
-// In Module
-import { initializeRouter, startsWith } from '@onecx/angular-webcomponents'
-@NgModule({
-providers: [
-        // other providers
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeRouter,
-            multi: true,
-            deps: [Router, AppStateService]
-        }
-    ]
-})
-----
-
-[#angular-routes-matcher-startswith]
-==== Routes Defined Using matcher and startsWith
-
-[source,typescript]
-----
-// Routes configuration
-export const routes: Routes = [
-  {
-    matcher: startsWith(''),
-    loadChildren: () => import('./feature/feature.module').then((mod) => mod.FeatureModule)
-  },
-  {
-    matcher: startsWith('tracking'),
-    loadChildren: () => import('./tracking/tracking.module').then((mod) => mod.TrackingModule)
-  }
-]
-----
-
-NOTE: When `startsWith` is used with `initializeRouter`, it removes already-used parts from the URL, allowing the app to route only within its own context instead of the shell's context.
-
-Services should use `PortalApiConfiguration` to construct correct URLs based on the current MFE topic, ensuring calls go to the right resources (e.g. `deployment_url/mfe/example/bff/search`).
-
-[#angular-remote-component-bootstrapping]
-==== Remote Component Bootstrapping
-
-Requirements:
-
-. Webpack exposes `main.ts`.
-. `main.ts` bootstraps asynchronously.
-. Bootstrap handles Angular-specific issues and registers a Custom Element.
-. The component uses the Remote Component initialization mechanism.
-
-.webpack.config.js
-[source,typescript]
-----
-const config = withModuleFederationPlugin({
-  name: 'example-ui',
-  filename: 'remoteEntry.js',
-  exposes: {
-    './ExampleComponent': './src/app/remotes/example/example.component.main.ts'
-  },
-})
-----
-
-.src/app/remotes/example/example.component.main.ts
-[source,typescript]
-----
-import('./example.component.bootstrap').catch((err) => console.error(err))
-----
-
-[%collapsible]
-.src/app/remotes/example/example.component.bootstrap.ts
-====
-[source,typescript]
-----
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { APP_INITIALIZER, importProvidersFrom } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AngularAuthModule } from '@onecx/angular-auth';
-import { bootstrapRemoteComponent } from '@onecx/angular-webcomponents';
-import { UserService } from '@onecx/portal-integration-angular';
-import { ExampleComponent } from './example.component';
-import { BASE_URL, provideTranslateServiceForRoot } from '@onecx/angular-remote-components';
-
-bootstrapRemoteComponent(
-  ExampleComponent,
-  'example-remote-component',
-  environment.production,
-  [
-    provideHttpClient(withInterceptorsFromDi()),
-    { provide: BASE_URL, useValue: new ReplaySubject<string>(1) },
-    provideTranslateServiceForRoot({ isolate: true }),
-    importProvidersFrom(AngularAuthModule, BrowserModule, BrowserAnimationsModule),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (userService: UserService) => () => userService.isInitialized,
-      deps: [UserService],
-      multi: true,
-    },
-  ]
-)
-----
-====
-
-`bootstrapRemoteComponent` creates an Angular application with the specified providers, connects to the shell router, and registers the Custom Element.
-
-[%collapsible]
-.src/app/remotes/example/example.component.ts
-====
-[source,typescript]
-----
-import { Component, Inject, Input } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { AngularAuthModule } from '@onecx/angular-auth';
-import { UserService } from '@onecx/angular-integration-interface';
-import {
-  AngularRemoteComponentsModule,
-  BASE_URL,
-  ocxRemoteComponent,
-  ocxRemoteWebcomponent,
-  RemoteComponentConfig,
-} from '@onecx/angular-remote-components';
-import { PortalCoreModule } from '@onecx/portal-integration-angular';
-import { ReplaySubject } from 'rxjs';
-
-@Component({
-  standalone: true,
-  imports: [
-    AngularAuthModule,
-    AngularRemoteComponentsModule,
-    PortalCoreModule,
-    TranslateModule,
-  ],
-  selector: 'example-comp',
-  template: `<h1>Hello from Remote Component</h1>`,
-})
-export class ExampleComponent implements ocxRemoteComponent, ocxRemoteWebcomponent {
-  permissions: string[] = [];
-
-  constructor(
-    @Inject(BASE_URL) private readonly baseUrl: ReplaySubject<string>,
-    private readonly userService: UserService,
-    private readonly translateService: TranslateService,
-    private readonly exampleService: ExampleAPIService
-  ) {
-    this.translateService.use(this.userService.lang$.getValue());
-  }
-
-  @Input() set ocxRemoteComponentConfig(config: RemoteComponentConfig) {
-    this.ocxInitRemoteComponent(config);
-  }
-
-  ocxInitRemoteComponent(config: RemoteComponentConfig): void {
-    this.baseUrl.next(config.baseUrl);
-    this.permissions = config.permissions;
-    this.exampleService.configuration = new Configuration({
-      basePath: Location.joinWithSlash(config.baseUrl, environment.apiPrefix)
-    })
-  }
-}
-----
-====
-
-Key component features:
-
-Component Initialization::
-The component implements `ocxRemoteWebcomponent` (required) and `ocxRemoteComponent` (optional). When `ocxRemoteComponentConfig` is set by the Slot Component, it should update `BASE_URL`, update permissions, and update service base URLs.
-
-RemoteComponentConfig Structure::
-|===
-| Property | Type | Description
-
-| `appId` | `string` | Microfrontend unique identifier
-| `productName` | `string` | Application name
-| `permissions` | `string[]` | User permissions
-| `baseUrl` | `string` | URL for accessing content, e.g. `'/mfe/mfe_name'`
-|===
-
-[#angular-shell-router-integration]
-== How the Shell Router Loads Your Module
-
-Once your application exposes a module or component as described above, the shell's router takes care of loading it at runtime:
-
-* The workspace configuration (backend route definitions) is converted into Angular lazy-loaded application routes, configured with the loading mechanism and path resolution for Module Federation, then merged with the shell's static routes (e.g. error pages, the about page).
-* On route activation, lazy loading triggers, Module Federation loads the remote microfrontend, shared dependencies are negotiated, and the microfrontend is rendered using the appropriate method for its configured type.
-
-No action is required on your application's side beyond exposing `remoteEntry.js` correctly (see above) — the shell router handles route conversion, merging, and negotiation automatically.
+* xref:documentation:docs-guides-ui:setup/required/expose-remote-module/module-approach.adoc[Module Approach] — expose a full Angular module, loaded on route activation.
+* xref:documentation:docs-guides-ui:setup/required/expose-remote-module/component-approach.adoc[Component Approach] — expose a single component, loaded by a Slot Component.
 
 [#react-applications]
 == React Applications
@@ -316,4 +71,4 @@ const config = withModuleFederationPlugin({
 })
 ----
 
-See xref:documentation:docs-guides-ui:react/libraries/react-webcomponents.adoc[@onecx/react-webcomponents] for the full library reference, including routing helpers (`useAppHref`, `SyncedRouterProvider`) used once your app is loaded in the shell.
+See xref:documentation:docs-guides-ui:react/libraries/react-webcomponents.adoc[@onecx/react-webcomponents] for the full library reference, including routing helpers (`useAppHref`, `SyncedRouterProvider`) used once the app is loaded in the shell.
