@@ -1,0 +1,295 @@
+:idprefix:
+:idseparator: -
+
+[#expose-component-styles-theming]
+= Expose Component Styles & Apply Theming
+
+An application integrated with OneCX still loads and runs even if its own or its libraries' styles aren't exposed correctly, but it renders with visibly wrong styles: missing layout, unstyled components, or a theme that doesn't match the rest of the shell. This page covers exposing your application's and its OneCX libraries' styles in the build output, and using OneCX theme variables so those styles stay aligned with the currently active theme.
+
+[#angular-applications]
+== Angular Applications
+
+[#angular-expose-app-styles]
+=== Expose App styles.css
+
+Your application must expose its own `styles.css` in the build output. How this is done depends on the build tool used:
+
+.NX (project.json)
+[source,json]
+----
+{
+    ...
+    "styles": [
+        {
+            "input": "./src/styles.scss",
+            "bundleName": "styles",
+            "inject": true
+        }
+    ],
+    ...
+}
+----
+
+.Angular CLI (package.json)
+[source,json]
+----
+{
+  ...
+  "scripts": {
+    "postbuild": "mv \"$(find dist/my-project-name -maxdepth 1 -type f -name 'styles.*.css' | head -n 1)\" dist/my-project-name/styles.css",
+  }
+  ...
+}
+----
+
+Because the generated stylesheet filename normally includes a content hash, adjust the build command to rename it to a stable `styles.css`:
+
+.Example package.json
+[source,json]
+----
+{
+  ...
+  "scripts": {
+    ...
+    "build": "nx build && cp dist/my-project-name/styles.*.css dist/my-project-name/styles.css",
+    ...
+  }
+  ...
+}
+----
+
+Verify that `styles.css`, including all of your app's styles, is present in the build output before deploying.
+
+[#angular-expose-library-styles]
+=== Expose Library Styles
+
+If your application uses OneCX libraries that ship their own stylesheets, expose those stylesheets in your build configuration as well — otherwise components sourced from those libraries render with incorrect styles.
+
+.Example styles configuration
+[source,json]
+----
+...
+  "build": {
+    ...
+    "styles": [
+      ...
+      // @onecx/portal-integration-angular
+      "node_modules/@onecx/portal-integration-angular/assets/styles.scss",
+
+      // @onecx/angular-accelerator
+      "node_modules/@onecx/angular-accelerator/assets/styles.scss",
+      ...
+    ],
+    ...
+  }
+...
+----
+
+[#theme-appliance]
+=== Theme Appliance
+
+In OneCX, each workspace can use a different theme for its pages. Each theme defines the same set of CSS variables, available on every page, but with different values. The availability of those CSS variables is handled by the OneCX shell based on the accessed workspace — an app does not have to do anything to apply the theme itself. The only responsibility is to use theme variables in its own styles instead of hard-coded values.
+
+[#theme-variables]
+=== Theme Variables
+
+Theme variables are CSS variables available on the page for any application.
+
+Below is a list of the theme variables available on the page:
+
+[#basic-variables]
+Basic Variables::
+====
+[cols="1,3"]
+|===
+|CSS variable
+|Description
+|`--primary-color`
+|Primary color of non-text content.
+|`--secondary-color`
+|Secondary color of non-text content.
+|`--content-bg-color`
+|Default background color of non-text content.
+|`--hover-bg-color`
+|Default background color on hover of non-text content.
+|===
+====
+
+[#text-variables]
+Text-related Variables::
+====
+[cols="1,3"]
+|===
+|CSS variable
+|Description
+|`--font-family`
+|Default font family for text content.
+|`--font-size`
+|Default font size for text content.
+|`--text-color`
+|Primary font text color.
+|`--text-secondary-color`
+|Secondary font text color for elements in lower design hierarchy, usually less prominent.
+|===
+====
+
+[#button-variables]
+Button-related Variables::
+====
+[cols="1,3"]
+|===
+|CSS variable
+|Description
+|`--button-hover-bg`
+|Background color of a button in hover state.
+|`--button-active-bg`
+|Background color of a button in active state.
+|`--danger-button-bg`
+|Background color of a button with danger severity.
+|===
+====
+
+[#message-variables]
+Message-related Variables::
+====
+[cols="1,3"]
+|===
+|CSS variable
+|Description
+|`--info-message-bg`
+|Background color of a message with info severity.
+|`--success-message-bg`
+|Background color of a message with success severity.
+|`--warning-message-bg`
+|Background color of a message with warning severity.
+|`--error-message-bg`
+|Background color of a message with error severity.
+|===
+====
+
+[#misc-variables]
+Misc Variables::
+====
+[cols="1,3"]
+|===
+|CSS variable
+|Description
+|`--divider-color`
+|Color of divider HTML elements, such as `<hr>` or component borders.
+|`--body-bg-color`
+|Background color of the document's body, used for the content pane's background color.
+|`--overlay-content-bg-color`
+|Background color of the overlays,
+|===
+====
+
+[#topbar-variables]
+Topbar Variables::
+====
+[cols="1,3"]
+|===
+|CSS variable
+|Description
+|`--topbar-bg-color`
+|Background color of the topbar.
+|`--topbar-left-bg-color`
+|Background color of the topbar's left side.
+|`--topbar-text-color`
+|Color of the text in the topbar.
+|`--topbar-item-text-color`
+|Color of the text of the items located in the topbar.
+|`--topbar-item-text-hover-bg-color`
+|Background color for the items located in the topbar on hover state.
+|`--topbar-menu-button-bg-color`
+|Background color of the vertical menu hiding toggle.
+|`--logo-color`
+|Color of the topbar's logo.
+|===
+====
+
+[#sidebar-variables]
+Sidebar Variables::
+====
+[cols="1,3"]
+|===
+|CSS variable
+|Description
+|`--menu-bg-color`
+|Background color of the sidebar (left side of the shell).
+|`--menu-text-color`
+|Text color of the menu, located in the sidebar (left side of the shell).
+|`--menu-item-text-color`
+|Text color of the menu item, located in the sidebar (left side of the shell).
+|`--menu-item-bg-color`
+|Background color of the menu item, located in the sidebar (left side of the shell).
+|`--menu-item-hover-bg-color`
+|Background color of the menu item in hover state, located in the sidebar (left side of the shell).
+|`--menu-active-item-text-color`
+|Text color of the menu item in active state, located in the sidebar (left side of the shell).
+|`--menu-active-item-bg-color`
+|Background color of the menu item in active state, located in the sidebar (left side of the shell).
+|===
+====
+
+[#utilizing-theme-variables]
+=== Utilizing Theme Variables
+
+When creating styles for UI components, it's important to consider whether a style should be theme-aware. Example of a stylesheet using a theme variable:
+
+.styles.css
+[.source,css]
+----
+button {
+    background-color: var(--primary-color);
+}
+----
+
+The example above sets the background color for each button element to the value corresponding to the `--primary-color` theme variable.
+
+[#react-applications]
+== React Applications
+
+React applications rely on `@onecx/react-utils` for style scoping and theme variable injection instead of a build-time styles configuration.
+
+[#react-style-scoping]
+=== Style Scoping
+
+Style scoping and PrimeReact isolation are wired automatically by the `withApp` and `withRemote` higher-order components (HOCs) from `@onecx/react-utils`. Use them to bootstrap your application so scoped containers are provided for your microfrontend.
+
+[source,tsx]
+----
+import { withApp, withRemote } from '@onecx/react-utils';
+
+export default withApp(AppRouter, {
+  PRODUCT_NAME: 'example',
+  REMOTES_NAME: 'example-remotes'
+});
+----
+
+[#react-theme-variable-injection]
+=== Theme Variable Injection
+
+Theme variables are injected at runtime by calling `applyThemeVariables`, which updates the `@layer tokens` block inside scoped style tags — you do not need to read or apply theme CSS variables manually.
+
+[source,ts]
+----
+import { applyThemeVariables } from '@onecx/react-utils/theme';
+
+applyThemeVariables(theme, 'example|example-ui');
+----
+
+[#react-primereact-theme-import]
+=== PrimeReact Theme Base Import
+
+To keep PrimeReact styles aligned with OneCX theming, import the base theme stylesheet from `@onecx/react-utils` in your app styles:
+
+[source,css]
+----
+@import "primereact/resources/primereact.min.css";
+@import "primeicons/primeicons.css";
+@import "@onecx/react-utils/primeBaseTheme.scss";
+----
+
+Ensure the app uses `ThemeProvider` (from `@onecx/react-integration-interface`) or the full provider set via `withApp`/`withRemote` so theme updates stay synchronized.
+
+See xref:documentation:docs-guides-ui:react/libraries/react-utils.adoc[@onecx/react-utils] for the full library reference, including dynamic portal-rendered style scoping and style-attribute helpers.
