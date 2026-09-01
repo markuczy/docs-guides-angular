@@ -6,6 +6,11 @@
 ** xref:documentation:docs-guides-ui:ui-additional/share-scopes.adoc[Share Scopes]
 ** xref:documentation:docs-guides-ui:ui-additional/enable-source-maps.adoc[Enable Source Maps]
 
+* Concepts
+** xref:documentation:docs-guides-ui:concepts/routing.adoc[Routing]
+*** xref:documentation:docs-guides-ui:concepts/routing/angular.adoc[Angular Applications]
+*** xref:documentation:docs-guides-ui:concepts/routing/react.adoc[React Applications]
+
 * xref:documentation:docs-guides-ui:angular/index.adoc[Angular]
 ** xref:documentation:docs-guides-ui:angular/guidelines.adoc[Guidelines]
 ** xref:documentation:docs-guides-ui:angular/app-to-onecx.adoc[Migrate Angular App to OneCX]
@@ -19,7 +24,6 @@
 ** xref:documentation:docs-guides-ui:angular/theming.adoc[Theming]
 ** xref:documentation:docs-guides-ui:angular/permissions/permissions.adoc[Permissions]
 *** xref:documentation:docs-guides-ui:angular/permissions/ifPermissions.adoc[ifPermissions Directive]
-** xref:documentation:docs-guides-ui:angular/routing/index.adoc[Routing]
 
 ** xref:documentation:docs-guides-ui:angular/primeng/primeng.adoc[PrimeNG]
 *** xref:documentation:docs-guides-ui:angular/primeng/theming.adoc[Theming with PrimeNG]
