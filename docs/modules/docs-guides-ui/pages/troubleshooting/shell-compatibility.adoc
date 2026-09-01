@@ -1,0 +1,30 @@
+:imagesdir: ../../images
+
+= Shell Compatibility
+
+Issues caused by a mismatch between the shell and the application — for example, package sharing or Angular version differences — are often resolved by inspecting what the shell actually exposes.
+
+[#shell-version-information]
+== Verify the shell's package versions
+
+Incorrect package sharing between the shell and the application can lead to issues. To verify the available major version of packages in the shell, check the xref:documentation:onecx-shell-ui:onecx-shell-ui-docs.adoc#shell-version-information[Shell version information] documentation.
+
+When working locally, also make sure the following are consistent between the shell and your app:
+
+* Make sure you are using the latest version of the shell.
+* Verify that the Angular version of the app is lower than the shell's.
+
+[#devtools-inspection]
+== Inspect the shared packages in the browser
+
+Go to the browser's DevTools and run the following command in the console:
+
+.DevTools console
+[source,javascript]
+----
+window['onecxWebpackContainer']
+----
+
+You will get a list of all the shared packages. Check, for example, the `@angular/core` entry to see the versions:
+
+image::devtools_webpack_shared_packages.png[]

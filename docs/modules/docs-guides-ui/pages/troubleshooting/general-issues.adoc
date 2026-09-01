@@ -1,0 +1,219 @@
+= General Issues
+
+These are the general, cross-cutting causes of most UI integration problems. Check them before assuming the issue is specific to a particular error.
+
+[#package-sharing]
+== Package sharing
+
+Common issues arise when the shared packages list is not complete or when the versions of the shared packages are not compatible. To verify correct package sharing, check the xref:documentation:onecx-portal-ui-libs:onecx-compatibility.adoc#package-sharing[package sharing] documentation and verify all technology dependent requirements in the xref:documentation:onecx-portal-ui-libs:onecx-compatibility.adoc[OneCX UI Compatibility] guide.
+
+[#webpack-shared-list]
+== Verify the shared list in `webpack.config.js`
+
+Make sure that all necessary packages are shared in your `webpack.config.js`:
+
+* angular packages
+* onecx packages
+* rxjs
+* primeng
+* ngx-translate
+* ngrx packages
+
+Check in your `package.json` which of the mentioned packages are installed:
+
+.Example `package.json`
+[source,json]
+----
+...
+"dependencies": {
+    ...
+    "@angular/core": "^18.2.12",
+    "@angular/forms": "^18.2.12",
+    "@angular/platform-browser": "^18.2.12",
+    "@angular/router": "^18.2.12",
+    "@ngx-translate/core": "^15.0.0",
+    "@onecx/accelerator": "^5.48.3",
+    "@onecx/integration-interface": "^5.48.3",
+    "primeng": "^17.18.11",
+    "rxjs": "~7.8.1",
+    ...
+  },
+...
+----
+
+Check your `webpack.config.js` if those packages are shared, and add them if they are missing:
+
+.Example `webpack.config.js`
+[cols="1a,1a",options="header"]
+|===
+| Correct (✓)
+| Incorrect (✗)
+
+|
+[source,javascript]
+----
+...
+  shared: share({
+    '@angular/common': {
+      requiredVersion: 'auto',
+      includeSecondaries: { skip: ['@angular/common/http/testing'] },
+    },
+    '@angular/common/http': {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
+    },
+    '@angular/core': { requiredVersion: 'auto', includeSecondaries: true },
+    '@angular/forms': { requiredVersion: 'auto', includeSecondaries: true },
+    '@angular/platform-browser': {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
+    },
+    '@angular/router': { requiredVersion: 'auto', includeSecondaries: true },
+    '@ngx-translate/core': { requiredVersion: 'auto' },
+    primeng: { requiredVersion: 'auto', includeSecondaries: true },
+    rxjs: { requiredVersion: 'auto', includeSecondaries: true },
+    '@onecx/accelerator': { requiredVersion: 'auto', includeSecondaries: true },
+    '@onecx/integration-interface': {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
+    },
+    ...
+  }),
+...
+----
+
+|
+[source,javascript]
+----
+...
+shared: share({
+    '@angular/common': {
+      requiredVersion: 'auto',
+      includeSecondaries: { skip: ['@angular/common/http/testing'] },
+    },
+    '@angular/common/http': {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
+    },
+    '@angular/forms': { requiredVersion: 'auto', includeSecondaries: true },
+    '@angular/platform-browser': {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
+    },
+    '@angular/router': { requiredVersion: 'auto', includeSecondaries: true },
+    '@ngx-translate/core': { requiredVersion: 'auto' },
+    primeng: { requiredVersion: 'auto', includeSecondaries: true },
+    '@onecx/accelerator': { requiredVersion: 'auto', includeSecondaries: true },
+    // MISSING: '@angular/core'
+    // MISSING: 'rxjs'
+    // MISSING: '@onecx/integration-interface'
+    ...
+  }),
+...
+----
+|===
+
+[#installed-packages]
+== Installed packages
+
+Verify that all shared packages use the caret `^` sign in your `package.json` (except for `rxjs`, which uses the tilde `~`).
+
+* First, check your `webpack.config.js` to see which packages are being shared:
+
+.Example `webpack.config.js`
+[source,javascript]
+----
+...
+    shared: share({
+    '@angular/common': {
+      requiredVersion: 'auto',
+      includeSecondaries: { skip: ['@angular/common/http/testing'] },
+    },
+    '@angular/common/http': {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
+    },
+    '@angular/core': { requiredVersion: 'auto', includeSecondaries: true },
+    '@angular/forms': { requiredVersion: 'auto', includeSecondaries: true },
+    '@angular/platform-browser': {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
+    },
+    '@angular/router': { requiredVersion: 'auto', includeSecondaries: true },
+    '@ngx-translate/core': { requiredVersion: 'auto' },
+    primeng: { requiredVersion: 'auto', includeSecondaries: true },
+    '@onecx/accelerator': { requiredVersion: 'auto', includeSecondaries: true },
+    ...
+  }),
+...
+----
+
+* Then check that the correct range (caret `^`, or tilde `~` for `rxjs`) is present for the shared packages in your `package.json`:
+
+.Example `package.json`
+[cols="1a,1a",options="header"]
+|===
+| Correct (✓)
+| Incorrect (✗)
+
+|
+[source,json]
+----
+...
+"dependencies": {
+    ...
+    "@angular/common": "^18.2.12",
+    "@angular/core": "^18.2.12",
+    "@angular/forms": "^18.2.12",
+    "@angular/platform-browser": "^18.2.12",
+    "@angular/router": "^18.2.12",
+    "@ngx-translate/core": "^15.0.0",
+    "@onecx/accelerator": "^5.48.3",
+    "@onecx/integration-interface": "^5.48.3",
+    "primeng": "^17.18.11",
+    "rxjs": "~7.8.1",
+    ...
+  },
+...
+----
+
+|
+[source,json]
+----
+...
+"dependencies": {
+    ...
+    "@angular/common": "18.2.12",
+    "@angular/core": "18.2.12",
+    "@angular/forms": "18.2.12",
+    "@angular/platform-browser": "18.2.12",
+    "@angular/router": "18.2.12",
+    "@ngx-translate/core": "15.0.0",
+    "@onecx/accelerator": "5.48.3",
+    "@onecx/integration-interface": "5.48.3",
+    "primeng": "17.18.11",
+    "rxjs": "7.8.1",
+    ...
+  },
+...
+----
+|===
+
+[#clean-install-build]
+== Clean install and build
+
+Sometimes, issues can be resolved by performing a clean install and build of the application. This involves removing caches, recreating dependencies, clearing the npm cache, and reinstalling all packages.
+
+Do a clean install and build of the app:
+
+* Remove caches (like the `.angular` and `.nx` folder)
+* Recreate dependencies (`node_modules` and `package-lock.json`)
+* Run the following command to clear the npm cache:
+----
+  npm cache clean --force
+----
+* Install all packages:
+----
+  npm install
+----
+* Build and run the app

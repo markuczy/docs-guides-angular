@@ -1,0 +1,77 @@
+:imagesdir: ../../images
+
+= Application Setup
+
+Make sure that the application is set up correctly to work in the environment. Regardless of the used local development strategy, the following should be checked:
+
+* `exposedModule` is set to the correct module name
+* `tagName` is set to the correct tag name
+* `remoteEntry` url is set to the correct url
+
+Depending on the used local development strategy, those values should be set in different places (data imports for the local environment, `values.yaml` of the application, or manual configuration on the OneCX platform via the Application Store and Workspace UIs).
+
+[#remote-module-name]
+== Remote module name
+
+Verify that the remote module name in your `webpack.config.js` is the same as the remote module setting in the Application Store.
+
+Navigate to the Application Store → open the app → click on the 'Components' tab → open the 'Module' UI component → check the app ID:
+
+.Example `webpack.config.js` and Application Store setting (remote module name)
+[cols="1a,1a",options="header"]
+|===
+| `webpack.config.js`
+| Application Store
+
+|
+[source,javascript]
+----
+...
+const config = withModuleFederationPlugin({
+  name: 'onecx-workspace-ui',
+  filename: 'remoteEntry.js',
+  exposes: {
+    './OneCXWorkspaceModule': 'src/main.ts',
+    ...
+    }
+  }),
+...
+----
+|
+image::application_store_remote_module_name.png[]
+|===
+
+[#tag-name]
+== Tag name
+
+Verify that the tag name for the component is the same as the tag name set in the Application Store:
+
+.Example `values.yaml` and Application Store setting (tag name)
+[cols="1a,1a",options="header"]
+|===
+| `values.yaml`
+| Application Store
+
+|
+[source,yaml]
+----
+...
+microfrontend:
+  enabled: true
+  specs:
+    main:
+      exposedModule: "./OneCXWorkspaceModule"
+      description: "OneCX Workspace UI"
+      note: "OneCX Workspace UI auto import via MF operator"
+      type: MODULE
+      technology: WEBCOMPONENTMODULE
+      remoteName: onecx-workspace
+      tagName: ocx-workspace-component
+      endpoints:
+        - name: workspace-detail
+          path: /{workspace-name}
+...
+----
+|
+image::application_store_remote_module_tag-name.png[]
+|===
