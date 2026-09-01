@@ -38,6 +38,8 @@ Basic Variables::
 |Secondary color of non-text content.
 |`--content-bg-color`
 |Default background color of non-text content.
+|`--content-alt-bg-color`
+|Alternate background color of non-text content.
 |`--hover-bg-color`
 |Default background color on hover of non-text content.
 |===
@@ -58,6 +60,8 @@ Text-related Variables::
 |Primary font text color.
 |`--text-secondary-color`
 |Secondary font text color for elements in lower design hierarchy, usually less prominent.
+|`--solid-surface-text-color`
+|Font text color on solid (opaque) surfaces.
 |===
 ====
 
@@ -107,7 +111,7 @@ Misc Variables::
 |`--body-bg-color`
 |Background color of the document's body, used for the content pane's background color.
 |`--overlay-content-bg-color`
-|Background color of the overlays,
+|Background color of the overlays.
 |===
 ====
 
@@ -130,6 +134,8 @@ Topbar Variables::
 |Background color for the items located in the topbar on hover state.
 |`--topbar-menu-button-bg-color`
 |Background color of the vertical menu hiding toggle.
+|`--topbar-menu-button-text-color`
+|Color of the text in the vertical menu hiding toggle.
 |`--logo-color`
 |Color of the topbar's logo.
 |===
@@ -156,6 +162,8 @@ Sidebar Variables::
 |Text color of the menu item in active state, located in the sidebar (left side of the shell).
 |`--menu-active-item-bg-color`
 |Background color of the menu item in active state, located in the sidebar (left side of the shell).
+|`--menu-inline-border-color`
+|Border color of the inline menu, located in the sidebar (left side of the shell).
 |===
 ====
 
