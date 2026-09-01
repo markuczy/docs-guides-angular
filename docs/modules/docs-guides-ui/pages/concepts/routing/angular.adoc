@@ -17,11 +17,8 @@ This page covers the Angular-specific routing guidelines. See xref:documentation
 
 When routing inside the application, it is important to use *relative paths* instead of *absolute paths*. This ensures that the application can handle routing correctly regardless of the workspace configuration.
 
-[#routing-inside-application-examples]
-==== Examples
-
 [#navigate-to-details-page]
-===== Navigate to details page
+==== Navigate to details page
 
 Application is currently at `https://shell_deployment_path/employees-workspace/client-management` and needs to navigate to a client with ID 123, it should use a relative path.
 
@@ -31,7 +28,7 @@ this.router.navigate(['client', 123]);
 ----
 
 [#navigate-back]
-===== Navigate back
+==== Navigate back
 
 Application is currently at `https://shell_deployment_path/employees-workspace/client-management/client/123` and needs to navigate back to the client list, it should use a relative path.
 
@@ -45,11 +42,8 @@ this.router.navigate(['../'], { relativeTo: this.route });
 
 Sometimes, it might be necessary to use absolute paths for routing. In such cases, it is crucial to construct the absolute path dynamically based on the current workspace configuration. This can be achieved by using the {app_state_service}[AppStateService] to get the `currentMfe$`, which contains the current workspace and application information.
 
-[#routing-using-absolute-paths-examples]
-==== Examples
-
 [#navigate-to-details-page-absolute]
-===== Navigate to details page using absolute path
+==== Navigate to details page using absolute path
 
 Application is currently at `https://shell_deployment_path/employees-workspace/client-management` and needs to navigate to a client with ID 123 using an absolute path. It should construct the absolute path dynamically.
 
