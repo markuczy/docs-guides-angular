@@ -18,11 +18,6 @@
 **** xref:documentation:docs-guides-ui:setup/recommended/expose-library-assets/react.adoc[React Applications]
 *** xref:documentation:docs-guides-ui:setup/recommended/adapt-routing.adoc[Adapt Routing]
 
-** Concepts
-*** xref:documentation:docs-guides-ui:concepts/routing.adoc[Routing]
-**** xref:documentation:docs-guides-ui:concepts/routing/angular.adoc[Angular Applications]
-**** xref:documentation:docs-guides-ui:concepts/routing/react.adoc[React Applications]
-
 ** xref:documentation:docs-guides-ui:troubleshooting.adoc[UI Troubleshooting]
 
 ** xref:documentation:docs-guides-ui:ui-additional/index.adoc[UI Additional Topics]
