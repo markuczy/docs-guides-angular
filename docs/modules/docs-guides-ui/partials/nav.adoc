@@ -19,11 +19,6 @@
 *** xref:documentation:docs-guides-ui:setup/recommended/adapt-routing.adoc[Adapt Routing]
 
 ** Concepts
-*** xref:documentation:docs-guides-ui:concepts/translations.adoc[Translations]
-**** xref:documentation:docs-guides-ui:concepts/translations/angular-setup.adoc[Angular Setup]
-**** xref:documentation:docs-guides-ui:concepts/translations/angular-usage.adoc[Angular Usage]
-**** xref:documentation:docs-guides-ui:concepts/translations/react-setup.adoc[React Setup]
-**** xref:documentation:docs-guides-ui:concepts/translations/react-usage.adoc[React Usage]
 *** xref:documentation:docs-guides-ui:concepts/routing.adoc[Routing]
 **** xref:documentation:docs-guides-ui:concepts/routing/angular.adoc[Angular Applications]
 **** xref:documentation:docs-guides-ui:concepts/routing/react.adoc[React Applications]
