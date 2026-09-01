@@ -1,0 +1,26 @@
+:idprefix:
+:idseparator: -
+
+[#translations]
+= Translations
+
+In OneCX, applications provide multi-language support through translations. Each application keeps its own translation files — key-value pairs, one set per supported language (for example `en` and `de`) — and at runtime looks up the value for a given key in the language the user has selected. A OneCX-compatible application that does not expose these translations still loads and runs, but its text is missing or untranslated, so translations should be set up for any app that must present localized content.
+
+== How translations work
+
+An application owns its own translation content and provides it to the framework's translation service. Once registered, the application resolves each key to the value in the active language, and that active language is the language of the user accessing the application.
+
+How a translation is written and looked up is the same idea regardless of technology: the source text is replaced by a key, and the framework resolves that key against the translation files for the current language. The only difference between technologies is which service does the lookup.
+
+* **Angular** applications use `@ngx-translate`. Translations are exposed by the app's own files, shared through the module-federation setup, and looked up in templates and components through the `translate` pipe or the `TranslateService`. See xref:documentation:docs-guides-ui:angular/translation/multi-language.adoc[Multi-language Translations] for the full Angular setup and usage.
+* **React** applications use `@onecx/react-utils` to register the app's translation resources with an `i18next` backend, and keep the current language in sync with the OneCX user language. See xref:documentation:docs-guides-ui:react/libraries/react-utils.adoc[@onecx/react-utils] for the full library reference.
+
+== What an application must do
+
+The responsibility of a OneCX-compatible application is to expose its translation files and make them available to the framework's translation service for each supported language, and to write its content against translation keys rather than hard-coded strings. When translation keys are used, the application automatically picks up the user's language and presents localized content; hard-coded strings, by contrast, do not localize and appear untranslated when the user's language differs.
+
+== Related
+
+NOTE: Once the Recommended Setup *Configure Translations* and *Expose Library Assets* pages are published, link them here as the practical step-by-step how-to (see internal-tasks#609).
+
+NOTE: A reciprocal cross-link to the *Multi-language* feature page will be added once that page exists — whichever ticket lands second (see internal-tasks#609).
