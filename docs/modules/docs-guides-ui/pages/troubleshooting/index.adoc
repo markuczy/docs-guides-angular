@@ -1,6 +1,9 @@
 :imagesdir: ../../images
 
-:page-aliases: :onecx-docs-dev/troubleshooting.adoc
+// Keep the pre-split single-page URI (docs-guides-ui:troubleshooting.adoc) resolving.
+// It is still referenced by the Developer Docs (onecx-docs-dev). The legacy
+// onecx-docs-dev component alias is preserved alongside it.
+:page-aliases: troubleshooting.adoc, :onecx-docs-dev/troubleshooting.adoc
 
 = Troubleshooting
 

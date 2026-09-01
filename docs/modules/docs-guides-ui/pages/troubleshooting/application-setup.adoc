@@ -13,14 +13,14 @@ Depending on the used local development strategy, those values should be set in 
 [#remote-module-name]
 == Remote module name
 
-Verify that the remote module name in your `webpack.config.js` is the same as the remote module setting in the Application Store.
+Verify that the remote module name in your module federation configuration (`module-federation.config.js` or `webpack.config.js`, depending on your setup) is the same as the remote module setting in the Application Store.
 
 Navigate to the Application Store → open the app → click on the 'Components' tab → open the 'Module' UI component → check the app ID:
 
-.Example `webpack.config.js` and Application Store setting (remote module name)
+.Example module federation configuration and Application Store setting (remote module name)
 [cols="1a,1a",options="header"]
 |===
-| `webpack.config.js`
+| `module-federation.config.js`
 | Application Store
 
 |
