@@ -4,7 +4,7 @@
 [#theming]
 = Theming
 
-In OneCX, theming controls how the content of a page looks. The OneCX shell, working together with the OneCX Theme Management application, provides the theme. The theme is a PrimeNG-based theme whose look is expressed as a set of CSS variables (design tokens). Each workspace can use a different theme, and the theme's variables are exposed on every page — with different values depending on the workspace being accessed.
+In OneCX, theming controls how the content of a page looks. The OneCX shell, working together with the OneCX Theme Management application, provides the theme. A theme's look is expressed as a set of CSS variables (design tokens) — OneCX's own suite of theme variables. Each workspace can use a different theme, and the theme's variables are exposed on every page — with different values depending on the workspace being accessed.
 
 [#how-theming-works]
 == How theming works
@@ -182,11 +182,9 @@ button {
 
 The example above sets the background color for each button element to the value corresponding to the `--primary-color` theme variable.
 
-NOTE: React applications that use PrimeReact additionally need to import a base theme stylesheet so PrimeReact styles align with OneCX theming. See xref:documentation:docs-guides-ui:react/libraries/react-utils.adoc[@onecx/react-utils] for the full library reference, including the PrimeReact theme base import and the underlying theme variable injection mechanism.
-
 [#related]
 == Related
 
-NOTE: Once the Recommended Setup *Apply Theming* and *Expose Component Styles* pages are published, link them here as the practical step-by-step how-to (see internal-tasks#608).
+To apply a theme to an application step by step, see xref:documentation:docs-guides-ui:setup/recommended/apply-theming.adoc[Apply Theming] and xref:documentation:docs-guides-ui:setup/recommended/expose-component-styles.adoc[Expose Component Styles].
 
-NOTE: A reciprocal cross-link to the *PrimeNG Theming Customization* feature page will be added once that page exists — whichever ticket lands second (see internal-tasks#608).
+For details on customizing the OneCX PrimeNG theme, see xref:documentation:docs-guides-ui:angular/primeng/theming.adoc[OneCX PrimeNG Theming].
