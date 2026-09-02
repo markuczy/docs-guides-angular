@@ -56,7 +56,7 @@ appStateService: AppStateService; // Injected via constructor
 
 async routeOnClick() {
     const mfeInfo = await firstValueFrom(this.appStateService.currentMfe$);
-    this.router.navigateByUrl(`/${mfeInfo.baseUrl}/client/123`);
+    this.router.navigateByUrl(`/${mfeInfo.baseHref}/client/123`);
 }
 ----
 
